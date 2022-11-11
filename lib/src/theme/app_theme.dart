@@ -76,6 +76,11 @@ class AppTheme {
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
+      subtitle2: const TextStyle(
+        color: Colors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
     ),
   );
 
@@ -100,6 +105,11 @@ class AppTheme {
       ),
       subtitle1: const TextStyle(
         color: accentColorDark,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+      subtitle2: const TextStyle(
+        color: Colors.white,
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),

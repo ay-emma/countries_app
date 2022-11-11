@@ -24,6 +24,8 @@ class HomePage extends ConsumerWidget {
         ? Colors.black
         : Colors.white;
     final appThemeMode = ref.read(themeNotifierProvider.notifier);
+    // final countriesData = ref.watch( countriesProvider.notifier);
+    final getCountries = ref.watch(getCountriesProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -115,44 +117,94 @@ class HomePage extends ConsumerWidget {
                 ],
               ),
               gapH10,
+              Expanded(
+                child: getCountries.when(
+                  error: (e, s) {
+                    return Center(
+                      child: Text("Error: $e"),
+                    );
+                  },
+                  loading: () {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  data: (data) {
+                    return ListView.builder(
+                        // shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          // if (index == 0) {
+                          //   return Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       const Text("A"),
+                          //       ListTile(
+                          //         title: Text(countryList[index].countryName),
+                          //       )
+                          //     ],
+                          //   );
+                          // }
+                          // log(initial);
+                          // if (initial !=
+                          //     countryList[index].countryName.substring(0, 1)) {
+                          //   initial =
+                          //       countryList[index].countryName.substring(0, 1);
+                          //   log(initial);
+                          //   return Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       Text(
+                          //         initial,
+                          //         style: themeContext.textTheme.subtitle1,
+                          //       ),
+                          //       ListTile(
+                          //         title: Text(countryList[index].countryName),
+                          //       )
+                          //     ],
+                          //   );
+                          // }
 
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: countryList.length,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("A"),
-                          ListTile(
-                            title: Text(countryList[index].countryName),
-                          )
-                        ],
-                      );
-                    }
-                    log(initial);
-                    if (initial !=
-                        countryList[index].countryName.substring(0, 1)) {
-                      initial = countryList[index].countryName.substring(0, 1);
-                      log(initial);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            initial,
-                            style: themeContext.textTheme.subtitle1,
-                          ),
-                          ListTile(
-                            title: Text(countryList[index].countryName),
-                          )
-                        ],
-                      );
-                    }
-
-                    return ListTile(
-                        title: Text(countryList[index].countryName));
-                  })
+                          return Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              //Country Avarta
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 45,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        data[index].flags?.png ??
+                                            "http://www.all-flags-world.com/country-flag/Nigeria/flag-nigeria-XL.jpg",
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                ),
+                                gapW10,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data[index].name?.common ?? "??",
+                                      style: themeContext.textTheme.subtitle2,
+                                    ),
+                                    Text(
+                                      data[index].capital?.first ?? "??",
+                                      style: themeContext.textTheme.subtitle1,
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  },
+                ),
+              )
             ],
           ),
         ),
