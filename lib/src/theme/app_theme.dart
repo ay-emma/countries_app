@@ -72,9 +72,9 @@ class AppTheme {
         fontWeight: FontWeight.w300,
       ),
       subtitle1: const TextStyle(
-        color: primaryColorLight,
-        fontSize: 15,
-        fontWeight: FontWeight.normal,
+        color: accentColorLight,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
       ),
     ),
   );
@@ -99,9 +99,9 @@ class AppTheme {
         fontWeight: FontWeight.w300,
       ),
       subtitle1: const TextStyle(
-        color: primaryColorDark,
-        fontSize: 15,
-        fontWeight: FontWeight.normal,
+        color: accentColorDark,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
       ),
     ),
   );

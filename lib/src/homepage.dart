@@ -1,10 +1,22 @@
+import 'dart:developer';
+
+import 'package:countries_app/src/model/model.dart';
 import 'package:countries_app/src/theme/app_theme.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+import 'model/country/country.dart';
 
+// ignore: must_be_immutable
+
+// https://restcountries.com/v3.1/all
+
+// ignore: must_be_immutable
+class HomePage extends ConsumerWidget {
+  HomePage({super.key});
+
+  String initial = "A";
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeContext = Theme.of(context);
@@ -102,6 +114,45 @@ class HomePage extends ConsumerWidget {
                       86, Icons.filter_alt_outlined, "Filter  ", iconColor),
                 ],
               ),
+              gapH10,
+
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: countryList.length,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("A"),
+                          ListTile(
+                            title: Text(countryList[index].countryName),
+                          )
+                        ],
+                      );
+                    }
+                    log(initial);
+                    if (initial !=
+                        countryList[index].countryName.substring(0, 1)) {
+                      initial = countryList[index].countryName.substring(0, 1);
+                      log(initial);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            initial,
+                            style: themeContext.textTheme.subtitle1,
+                          ),
+                          ListTile(
+                            title: Text(countryList[index].countryName),
+                          )
+                        ],
+                      );
+                    }
+
+                    return ListTile(
+                        title: Text(countryList[index].countryName));
+                  })
             ],
           ),
         ),
@@ -110,29 +161,47 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _filterBtn(double width, IconData icon, String text, iconColor) {
-    return Container(
-      width: width,
-      height: 40,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: filterBorderColor,
-        ),
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Icon(
-            icon,
-            color: iconColor,
+    return InkWell(
+      onTap: () async {
+        // try {
+        var response = await Dio().get('https://restcountries.com/v3.1/all');
+        // print(response.data);
+        final data = response.data as List<dynamic>;
+        final dataList = data.map(
+          (e) {
+            return Country.fromJson(e as Map<String, dynamic>);
+          },
+        ).toList();
+
+        print(dataList);
+        // } catch (e) {
+        //   print(e);
+        // }
+      },
+      child: Container(
+        width: width,
+        height: 40,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: filterBorderColor,
           ),
-          Text(
-            text,
-            style: TextStyle(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(
+              icon,
               color: iconColor,
             ),
-          ),
-        ],
+            Text(
+              text,
+              style: TextStyle(
+                color: iconColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
