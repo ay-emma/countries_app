@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:countries_app/src/country_detail_page.dart';
 import 'package:countries_app/src/model/model.dart';
 import 'package:countries_app/src/theme/app_theme.dart';
 import 'package:dio/dio.dart';
@@ -26,6 +25,9 @@ class HomePage extends ConsumerWidget {
     final appThemeMode = ref.read(themeNotifierProvider.notifier);
     // final countriesData = ref.watch( countriesProvider.notifier);
     final getCountries = ref.watch(getCountriesProvider);
+    final choosenLang = ref.watch(choosenLangProvider);
+    TextEditingController searchController = TextEditingController();
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -97,10 +99,16 @@ class HomePage extends ConsumerWidget {
                       color: themeContext.cardColor,
                     ),
                     const Spacer(),
-                    Text(
-                      "Search Country",
-                      style: themeContext.textTheme.headline6,
+                    SizedBox(
+                      width: 100,
+                      child: TextField(
+                        controller: searchController,
+                      ),
                     ),
+                    // Text(
+                    //   "Search Country",
+                    //   style: themeContext.textTheme.headline6,
+                    // ),
                     const Spacer(),
                     gapW15,
                   ],
@@ -110,10 +118,108 @@ class HomePage extends ConsumerWidget {
               // Filters btn
               Row(
                 children: [
-                  _filterBtn(73, Icons.language, "EN  ", iconColor),
+                  // EN
+                  Builder(builder: (context) {
+                    return InkWell(
+                        onTap: () async {
+                          showBottomSheet(
+                              elevation: 70.0,
+                              context: context,
+                              backgroundColor: themeContext
+                                  .scaffoldBackgroundColor
+                                  .withOpacity(0.92),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(32.0),
+                                topRight: Radius.circular(32.0),
+                              )),
+                              builder: (context) {
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 10.0),
+                                  height: 600,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Language",
+                                            style: themeContext
+                                                .textTheme.headline3,
+                                          ),
+                                          const Spacer(),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Icon(
+                                              Icons.cancel_sharp,
+                                              // color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      gapH15,
+                                      for (var i in langs)
+                                        InkWell(
+                                          onTap: () {
+                                            ref
+                                                .read(choosenLangProvider
+                                                    .notifier)
+                                                .update((state) => i);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  i.name,
+                                                  style: themeContext
+                                                      .textTheme.headline5,
+                                                ),
+                                                const Spacer(),
+                                                const Icon(
+                                                  Icons.circle_outlined,
+                                                ),
+                                                gapW10,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                );
+                              });
+
+                          // try {
+                          var response = await Dio()
+                              .get('https://restcountries.com/v3.1/all');
+                          // print(response.data);
+                          final data = response.data as List<dynamic>;
+                          final dataList = data.map(
+                            (e) {
+                              return Country.fromJson(
+                                  e as Map<String, dynamic>);
+                            },
+                          ).toList();
+
+                          print(dataList);
+
+                          // } catch (e) {
+                          //   print(e);
+                          // }
+                        },
+                        child:
+                            _filterBtn(73, Icons.language, "EN  ", iconColor));
+                  }),
                   const Spacer(),
-                  _filterBtn(
-                      86, Icons.filter_alt_outlined, "Filter  ", iconColor),
+                  InkWell(
+                    onTap: (() {}),
+                    child: _filterBtn(
+                        86, Icons.filter_alt_outlined, "Filter  ", iconColor),
+                  ),
                 ],
               ),
               gapH10,
@@ -164,41 +270,81 @@ class HomePage extends ConsumerWidget {
                           //     ],
                           //   );
                           // }
+                          var translatedName = data[index].name?.common;
 
-                          return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              //Country Avarta
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 45,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        data[index].flags?.png ??
-                                            "http://www.all-flags-world.com/country-flag/Nigeria/flag-nigeria-XL.jpg",
-                                      ),
-                                      fit: BoxFit.fill,
-                                    ),
-                                    borderRadius: BorderRadius.circular(6.0),
+                          switch (choosenLang.shortName) {
+                            case 'ara':
+                              {
+                                translatedName =
+                                    data[index].translations!.ara!.official;
+                                break;
+                              }
+                            case "rus":
+                              {
+                                translatedName =
+                                    data[index].translations!.rus!.official;
+                                break;
+                              }
+                            case "jpn":
+                              {
+                                translatedName =
+                                    data[index].translations!.jpn!.official;
+                                break;
+                              }
+
+                            default:
+                              {
+                                break;
+                              }
+                          }
+                          return InkWell(
+                            onTap: (() {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CountryDetailsPage(
+                                    country: data[index],
                                   ),
                                 ),
-                                gapW10,
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data[index].name?.common ?? "??",
-                                      style: themeContext.textTheme.subtitle2,
+                              );
+                            }),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                //Country Avarta
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    width: 45,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          data[index].flags?.png ??
+                                              "http://www.all-flags-world.com/country-flag/Nigeria/flag-nigeria-XL.jpg",
+                                        ),
+                                        fit: BoxFit.fill,
+                                      ),
+                                      borderRadius: BorderRadius.circular(6.0),
                                     ),
-                                    Text(
-                                      data[index].capital?.first ?? "??",
-                                      style: themeContext.textTheme.subtitle1,
-                                    )
-                                  ],
-                                )
-                              ],
+                                  ),
+                                  gapW10,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        translatedName ?? "",
+                                        style: themeContext.textTheme.subtitle2,
+                                      ),
+                                      Text(
+                                        data[index].capital?.first ?? "??",
+                                        style: themeContext.textTheme.subtitle1,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         });
@@ -213,47 +359,29 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _filterBtn(double width, IconData icon, String text, iconColor) {
-    return InkWell(
-      onTap: () async {
-        // try {
-        var response = await Dio().get('https://restcountries.com/v3.1/all');
-        // print(response.data);
-        final data = response.data as List<dynamic>;
-        final dataList = data.map(
-          (e) {
-            return Country.fromJson(e as Map<String, dynamic>);
-          },
-        ).toList();
-
-        print(dataList);
-        // } catch (e) {
-        //   print(e);
-        // }
-      },
-      child: Container(
-        width: width,
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: filterBorderColor,
-          ),
-          borderRadius: BorderRadius.circular(4.0),
+    return Container(
+      width: width,
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: filterBorderColor,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(
-              icon,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Icon(
+            icon,
+            color: iconColor,
+          ),
+          Text(
+            text,
+            style: TextStyle(
               color: iconColor,
             ),
-            Text(
-              text,
-              style: TextStyle(
-                color: iconColor,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

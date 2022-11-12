@@ -1,6 +1,13 @@
 # countries_app
 
-A new Flutter project.
+A  Flutter project that shows list of countries and details about each country.
+
+## Features Currently supported
+
+- View all countries
+- Theme mode switch
+- Localization filter
+- View a country detail  
 
 ## Getting Started
 

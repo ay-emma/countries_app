@@ -48,6 +48,9 @@ const filterBorderColor = Color(0xFFA9B8D5);
 const primaryColorLight = Color(0XFFFFFFFF);
 const primaryColorDark = Color(0XFF000F24);
 
+const darkOneColor = Color(0xFFEAECF0);
+const lightOneColor = Color(0xFF001637);
+
 ///Theme class for light and dark mode
 class AppTheme {
   AppTheme._();
@@ -56,15 +59,21 @@ class AppTheme {
     scaffoldBackgroundColor: const Color(0XFFF4F6FA),
     primaryColor: primaryColorLight,
     cardColor: accentColorLight,
+    iconTheme: const IconThemeData(color: lightOneColor),
     textTheme: TextTheme(
       headline2: GoogleFonts.oleoScript(
         fontSize: 40,
-        color: const Color(0xFF001637),
+        color: lightOneColor,
       ),
       headline3: const TextStyle(
-        color: primaryColorLight,
-        fontSize: 28,
+        color: lightOneColor,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
+      ),
+      headline5: const TextStyle(
+        color: lightOneColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
       ),
       headline6: const TextStyle(
         color: accentColorLight,
@@ -85,18 +94,27 @@ class AppTheme {
   );
 
   static final darkTheme = ThemeData(
-    scaffoldBackgroundColor: const Color(0XFF000000),
+    scaffoldBackgroundColor: const Color(0XFF000F24),
+    // backgroundColor: ,
     primaryColor: primaryColorDark,
     cardColor: accentColorDark,
+    iconTheme: const IconThemeData(
+      color: darkOneColor,
+    ),
     textTheme: TextTheme(
       headline2: GoogleFonts.oleoScript(
         fontSize: 40,
-        color: const Color(0xFFEAECF0),
+        color: darkOneColor,
       ),
       headline3: const TextStyle(
-        color: primaryColorDark,
-        fontSize: 28,
+        color: darkOneColor,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
+      ),
+      headline5: const TextStyle(
+        color: darkOneColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
       ),
       headline6: const TextStyle(
         color: accentColorDark,

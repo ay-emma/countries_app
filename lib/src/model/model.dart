@@ -1,25 +1,7 @@
 import 'dart:developer';
-
 import 'package:countries_app/src/model/country/country.dart';
 import 'package:dio/dio.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final countryList = <DummyCountry>[
-  DummyCountry(countryName: "Afghanistan", capital: "Kabul"),
-  DummyCountry(countryName: "Albania", capital: "Tirana"),
-  DummyCountry(countryName: "Algeria", capital: "Andorra"),
-  DummyCountry(countryName: "Angola", capital: "Luanda"),
-  DummyCountry(countryName: "Bahamas", capital: "Nassau"),
-  DummyCountry(countryName: "Bahrain", capital: "Manama"),
-  DummyCountry(countryName: "Bangladesh", capital: "Dhaka"),
-];
-
-class DummyCountry {
-  DummyCountry({required this.countryName, required this.capital});
-  final String countryName;
-  final String capital;
-}
 
 final getCountriesProvider = FutureProvider(((ref) async {
   final countriesStateNotifer = ref.watch(countriesProvider.notifier);
@@ -38,7 +20,9 @@ final getCountriesProvider = FutureProvider(((ref) async {
   return dataList;
 }));
 
-final countriesProvider = StateNotifierProvider(((ref) => Countries()));
+final countriesProvider = StateNotifierProvider(
+  ((ref) => Countries()),
+);
 
 class Countries extends StateNotifier<List<Country>> {
   Countries() : super([]);
@@ -59,7 +43,132 @@ class Countries extends StateNotifier<List<Country>> {
     }
   }
 
+  var local = 'eng';
+
   getDetail() {
     // return;
   }
 }
+
+final choosenLangProvider = StateProvider(
+  ((ref) => Langs(
+        name: "English",
+        shortName: "eng",
+        isSelected: false,
+      )),
+);
+
+List<Langs> langs = [
+  Langs(name: "Arabic", shortName: "ara", isSelected: false),
+  Langs(name: "English", shortName: "eng", isSelected: false),
+  Langs(name: "Барбадос", shortName: "rus", isSelected: false),
+  Langs(name: "バルバドス", shortName: "jpn", isSelected: false),
+];
+
+class Langs {
+  Langs(
+      {required this.name, required this.shortName, required this.isSelected});
+  String name;
+  String shortName;
+  bool isSelected;
+}
+
+
+///    "translations": {
+    //   "ara": {
+    //     "official": "باربادوس",
+    //     "common": "باربادوس"
+    //   },
+    //   "bre": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "ces": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "cym": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "deu": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "est": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "fin": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "fra": {
+    //     "official": "Barbade",
+    //     "common": "Barbade"
+    //   },
+    //   "hrv": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "hun": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "ita": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "jpn": {
+    //     "official": "バルバドス",
+    //     "common": "バルバドス"
+    //   },
+    //   "kor": {
+    //     "official": "바베이도스",
+    //     "common": "바베이도스"
+    //   },
+    //   "nld": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "per": {
+    //     "official": "باربادوس",
+    //     "common": "باربادوس"
+    //   },
+    //   "pol": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "por": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "rus": {
+    //     "official": "Барбадос",
+    //     "common": "Барбадос"
+    //   },
+    //   "slk": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "spa": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "swe": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "tur": {
+    //     "official": "Barbados",
+    //     "common": "Barbados"
+    //   },
+    //   "urd": {
+    //     "official": "بارباڈوس",
+    //     "common": "بارباڈوس"
+    //   },
+    //   "zho": {
+    //     "official": "巴巴多斯",
+    //     "common": "巴巴多斯"
+    //   }
+    // },
