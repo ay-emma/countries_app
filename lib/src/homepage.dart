@@ -43,13 +43,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     final List<Country> countries = ref.watch(countriesProvider);
     final choosenLang = ref.watch(choosenLangProvider);
 
+    final progress = ref.watch(getCountriesProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             children: [
-              // First row
+              // Logo
               Row(
                 children: [
                   Row(
@@ -248,6 +250,21 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ],
               ),
               gapH10,
+              progress.when(
+                data: (data) {
+                  return Container();
+                },
+                loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                error: ((error, stackTrace) {
+                  return const Center(
+                    child: Text("Opps an Error occured"),
+                  );
+                }),
+              ),
               Expanded(
                   child: ListView.builder(
                       itemCount: countries.length,
@@ -362,6 +379,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               Text(
                 translationName,
                 style: sub2,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
               ),
               Text(
                 country,
