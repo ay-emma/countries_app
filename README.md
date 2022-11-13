@@ -4,10 +4,11 @@ A  Flutter project that shows list of countries and details about each country.
 
 ## Features Currently supported
 
-- View all countries
+- View all sorted list of countries
 - Theme mode switch
 - Localization filter
-- View a country detail  
+- View a country details
+- Search for a country by name
 
 ## Getting Started
 

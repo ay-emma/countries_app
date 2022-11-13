@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:countries_app/src/country_detail_page.dart';
+import 'package:countries_app/src/model/country/translations.dart';
 import 'package:countries_app/src/model/model.dart';
 import 'package:countries_app/src/theme/app_theme.dart';
 import 'package:dio/dio.dart';
@@ -12,21 +15,33 @@ import 'model/country/country.dart';
 // https://restcountries.com/v3.1/all
 
 // ignore: must_be_immutable
-class HomePage extends ConsumerWidget {
-  HomePage({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
 
-  String initial = "A";
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  String initial = "XX";
+
+  @override
+  void initState() {
+    ref.read(getCountriesProvider);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final themeContext = Theme.of(context);
     final iconColor = themeContext.primaryColor == const Color(0XFFFFFFFF)
         ? Colors.black
         : Colors.white;
     final appThemeMode = ref.read(themeNotifierProvider.notifier);
     // final countriesData = ref.watch( countriesProvider.notifier);
-    final getCountries = ref.watch(getCountriesProvider);
+    final List<Country> countries = ref.watch(countriesProvider);
     final choosenLang = ref.watch(choosenLangProvider);
-    TextEditingController searchController = TextEditingController();
 
     return Scaffold(
       body: SafeArea(
@@ -100,15 +115,25 @@ class HomePage extends ConsumerWidget {
                     ),
                     const Spacer(),
                     SizedBox(
-                      width: 100,
+                      width: 200,
                       child: TextField(
-                        controller: searchController,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: "Search Country",
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: themeContext.cardColor,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) {
+                          ref
+                              .read(countriesProvider.notifier)
+                              .searchQuery(value);
+                        },
                       ),
                     ),
-                    // Text(
-                    //   "Search Country",
-                    //   style: themeContext.textTheme.headline6,
-                    // ),
                     const Spacer(),
                     gapW15,
                   ],
@@ -224,136 +249,127 @@ class HomePage extends ConsumerWidget {
               ),
               gapH10,
               Expanded(
-                child: getCountries.when(
-                  error: (e, s) {
-                    return Center(
-                      child: Text("Error: $e"),
-                    );
-                  },
-                  loading: () {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                  data: (data) {
-                    return ListView.builder(
-                        // shrinkWrap: true,
-                        itemCount: data.length,
-                        itemBuilder: (context, index) {
-                          // if (index == 0) {
-                          //   return Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.start,
-                          //     children: [
-                          //       const Text("A"),
-                          //       ListTile(
-                          //         title: Text(countryList[index].countryName),
-                          //       )
-                          //     ],
-                          //   );
-                          // }
-                          // log(initial);
-                          // if (initial !=
-                          //     countryList[index].countryName.substring(0, 1)) {
-                          //   initial =
-                          //       countryList[index].countryName.substring(0, 1);
-                          //   log(initial);
-                          //   return Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.start,
-                          //     children: [
-                          //       Text(
-                          //         initial,
-                          //         style: themeContext.textTheme.subtitle1,
-                          //       ),
-                          //       ListTile(
-                          //         title: Text(countryList[index].countryName),
-                          //       )
-                          //     ],
-                          //   );
-                          // }
-                          var translatedName = data[index].name?.common;
+                  child: ListView.builder(
+                      itemCount: countries.length,
+                      itemBuilder: (context, index) {
+                        var common = countries[index].name?.common;
+                        var translatedName = _getTraslation(
+                          common!,
+                          choosenLang.shortName,
+                          countries[index].translations!,
+                        );
 
-                          switch (choosenLang.shortName) {
-                            case 'ara':
-                              {
-                                translatedName =
-                                    data[index].translations!.ara!.official;
-                                break;
-                              }
-                            case "rus":
-                              {
-                                translatedName =
-                                    data[index].translations!.rus!.official;
-                                break;
-                              }
-                            case "jpn":
-                              {
-                                translatedName =
-                                    data[index].translations!.jpn!.official;
-                                break;
-                              }
-
-                            default:
-                              {
-                                break;
-                              }
-                          }
-                          return InkWell(
-                            onTap: (() {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CountryDetailsPage(
-                                    country: data[index],
-                                  ),
-                                ),
-                              );
-                            }),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                //Country Avarta
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    width: 45,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(
-                                          data[index].flags?.png ??
-                                              "http://www.all-flags-world.com/country-flag/Nigeria/flag-nigeria-XL.jpg",
-                                        ),
-                                        fit: BoxFit.fill,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
-                                  ),
-                                  gapW10,
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        translatedName ?? "",
-                                        style: themeContext.textTheme.subtitle2,
-                                      ),
-                                      Text(
-                                        data[index].capital?.first ?? "??",
-                                        style: themeContext.textTheme.subtitle1,
-                                      )
-                                    ],
-                                  )
-                                ],
+                        if (index == 0 && initial != common.substring(0, 1)) {
+                          initial = common.substring(0, 1);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "A",
+                                style: themeContext.textTheme.subtitle1,
                               ),
-                            ),
+                              gapH10,
+                              _listTile(
+                                flagName: countries[index].flags!.png ?? "",
+                                translationName: translatedName,
+                                country: countries[index].capital?.first ?? "",
+                                sub1: themeContext.textTheme.subtitle1!,
+                                sub2: themeContext.textTheme.subtitle2!,
+                              ),
+                            ],
                           );
-                        });
-                  },
-                ),
-              )
+                        }
+
+                        log(initial);
+                        if (initial != common.substring(0, 1)) {
+                          initial = common.substring(0, 1);
+                          log(initial);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              gapH10,
+                              Text(
+                                initial,
+                                style: themeContext.textTheme.subtitle1,
+                              ),
+                              gapH10,
+                              _listTile(
+                                flagName: countries[index].flags!.png ?? "",
+                                translationName: translatedName,
+                                country: countries[index].capital?.first ?? "",
+                                sub1: themeContext.textTheme.subtitle1!,
+                                sub2: themeContext.textTheme.subtitle2!,
+                              ),
+                            ],
+                          );
+                        }
+                        // var translatedName = data[index].name?.common;
+
+                        return InkWell(
+                          onTap: (() {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CountryDetailsPage(
+                                  country: countries[index],
+                                ),
+                              ),
+                            );
+                          }),
+                          child: _listTile(
+                            flagName: countries[index].flags!.png ?? "",
+                            translationName: translatedName,
+                            country: countries[index].capital?.first ?? "",
+                            sub1: themeContext.textTheme.subtitle1!,
+                            sub2: themeContext.textTheme.subtitle2!,
+                          ),
+                        );
+                      }))
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _listTile({
+    required String flagName,
+    required String translationName,
+    required String country,
+    required TextStyle sub1,
+    required TextStyle sub2,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        //Country Avarta
+        children: [
+          Container(
+            height: 40,
+            width: 45,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(flagName),
+                fit: BoxFit.fill,
+              ),
+              borderRadius: BorderRadius.circular(6.0),
+            ),
+          ),
+          gapW10,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                translationName,
+                style: sub2,
+              ),
+              Text(
+                country,
+                style: sub1,
+              )
+            ],
+          )
+        ],
       ),
     );
   }
@@ -384,5 +400,27 @@ class HomePage extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+String _getTraslation(
+    String defaultValue, String shortName, Translations trans) {
+  switch (shortName) {
+    case 'ara':
+      {
+        return trans.ara!.official!;
+      }
+    case "rus":
+      {
+        return trans.rus!.official!;
+      }
+    case "jpn":
+      {
+        return trans.jpn!.official!;
+      }
+    default:
+      {
+        return defaultValue;
+      }
   }
 }
