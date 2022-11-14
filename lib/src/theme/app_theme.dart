@@ -53,13 +53,18 @@ const lightOneColor = Color(0xFF001637);
 
 ///Theme class for light and dark mode
 class AppTheme {
-  AppTheme._();
-
   static final lightTheme = ThemeData(
     scaffoldBackgroundColor: const Color(0XFFF4F6FA),
     primaryColor: primaryColorLight,
     cardColor: accentColorLight,
     iconTheme: const IconThemeData(color: lightOneColor),
+    expansionTileTheme: const ExpansionTileThemeData(
+      tilePadding: EdgeInsets.all(0.0),
+      textColor: primaryColorDark,
+      iconColor: primaryColorDark,
+      collapsedIconColor: primaryColorDark,
+      collapsedTextColor: primaryColorDark,
+    ),
     textTheme: TextTheme(
       headline2: GoogleFonts.oleoScript(
         fontSize: 40,
@@ -77,6 +82,11 @@ class AppTheme {
       ),
       headline6: const TextStyle(
         color: accentColorLight,
+        fontSize: 16,
+        fontWeight: FontWeight.w300,
+      ),
+      bodyText2: const TextStyle(
+        color: Colors.black,
         fontSize: 16,
         fontWeight: FontWeight.w300,
       ),
@@ -101,6 +111,13 @@ class AppTheme {
     iconTheme: const IconThemeData(
       color: darkOneColor,
     ),
+    expansionTileTheme: const ExpansionTileThemeData(
+      tilePadding: EdgeInsets.all(0.0),
+      textColor: primaryColorLight,
+      iconColor: primaryColorLight,
+      collapsedIconColor: primaryColorLight,
+      collapsedTextColor: primaryColorLight,
+    ),
     textTheme: TextTheme(
       headline2: GoogleFonts.oleoScript(
         fontSize: 40,
@@ -118,6 +135,11 @@ class AppTheme {
       ),
       headline6: const TextStyle(
         color: accentColorDark,
+        fontSize: 16,
+        fontWeight: FontWeight.w300,
+      ),
+      bodyText2: const TextStyle(
+        color: Colors.white,
         fontSize: 16,
         fontWeight: FontWeight.w300,
       ),

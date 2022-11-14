@@ -219,34 +219,181 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ),
                                 );
                               });
-
-                          // try {
-                          var response = await Dio()
-                              .get('https://restcountries.com/v3.1/all');
-                          // print(response.data);
-                          final data = response.data as List<dynamic>;
-                          final dataList = data.map(
-                            (e) {
-                              return Country.fromJson(
-                                  e as Map<String, dynamic>);
-                            },
-                          ).toList();
-
-                          print(dataList);
-
-                          // } catch (e) {
-                          //   print(e);
-                          // }
                         },
                         child:
                             _filterBtn(73, Icons.language, "EN  ", iconColor));
                   }),
+
+                  //? Continet and timezone filter
                   const Spacer(),
-                  InkWell(
-                    onTap: (() {}),
-                    child: _filterBtn(
-                        86, Icons.filter_alt_outlined, "Filter  ", iconColor),
-                  ),
+                  Builder(builder: (context) {
+                    return InkWell(
+                      onTap: (() {
+                        showBottomSheet(
+                          elevation: 70.0,
+                          context: context,
+                          backgroundColor: themeContext.scaffoldBackgroundColor
+                              .withOpacity(0.92),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(32.0),
+                            topRight: Radius.circular(32.0),
+                          )),
+                          builder: (context) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 10.0),
+                              height: 600,
+                              child: ListView(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Filter",
+                                        style: themeContext.textTheme.headline3,
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        icon: const Icon(
+                                          Icons.cancel_sharp,
+                                          // color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  gapH15,
+
+                                  //Continent Filter
+                                  Consumer(builder: (context, ref, child) {
+                                    final List<ContinentFilter>
+                                        continentFilter =
+                                        ref.watch(continentFilterProvider);
+                                    log("I got rebuilt from continent filters");
+                                    return ExpansionTile(
+                                      title: Text(
+                                        "Continent",
+                                        style: themeContext.textTheme.headline5!
+                                            .copyWith(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      expandedAlignment: Alignment.centerLeft,
+                                      children: [
+                                        for (var i = 0;
+                                            i < continentFilter.length;
+                                            i++)
+                                          InkWell(
+                                              onTap: (() {
+                                                ref
+                                                    .read(
+                                                        continentFilterProvider
+                                                            .notifier)
+                                                    .changeState(i);
+                                              }),
+                                              child: _filterTile(
+                                                  continentFilter[i].continent,
+                                                  continentFilter[i].isChecked,
+                                                  context)),
+                                      ],
+                                    );
+                                  }),
+                                  //Timezone Filter
+                                  Consumer(builder: (context, ref, child) {
+                                    final List<TimezoneFilter> timezoneFileter =
+                                        ref.watch(timezoneFilterProvider);
+                                    log("I got rebuilt from Timezone filters");
+                                    return ExpansionTile(
+                                      title: Text(
+                                        "Timezone",
+                                        style: themeContext.textTheme.headline5!
+                                            .copyWith(
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      expandedAlignment: Alignment.centerLeft,
+                                      children: [
+                                        for (var i = 0;
+                                            i < timezoneFileter.length;
+                                            i++)
+                                          InkWell(
+                                            onTap: (() {
+                                              ref
+                                                  .read(timezoneFilterProvider
+                                                      .notifier)
+                                                  .changeState(i);
+                                            }),
+                                            child: _filterTile(
+                                              timezoneFileter[i].timezone,
+                                              timezoneFileter[i].isChecked,
+                                              context,
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  }),
+
+                                  gapH15,
+
+                                  Row(
+                                    children: [
+                                      //Reset btn
+                                      InkWell(
+                                        onTap: (() {}),
+                                        child: Container(
+                                          width: 100,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color:
+                                                  themeContext.iconTheme.color!,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              "Reset",
+                                              style: themeContext
+                                                  .textTheme.bodyText2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      //Reset btn
+                                      InkWell(
+                                        onTap: (() {}),
+                                        child: Container(
+                                          width: 235,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFFF6C00),
+                                            borderRadius:
+                                                BorderRadius.circular(4.0),
+                                          ),
+                                          child: const Center(
+                                            child: Text("Show results",
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }),
+                      child: _filterBtn(
+                          86, Icons.filter_alt_outlined, "Filter  ", iconColor),
+                    );
+                  }),
                 ],
               ),
               gapH10,
@@ -266,82 +413,83 @@ class _HomePageState extends ConsumerState<HomePage> {
                 }),
               ),
               Expanded(
-                  child: ListView.builder(
-                      itemCount: countries.length,
-                      itemBuilder: (context, index) {
-                        var common = countries[index].name?.common;
-                        var translatedName = _getTraslation(
-                          common!,
-                          choosenLang.shortName,
-                          countries[index].translations!,
-                        );
-
-                        if (index == 0 && initial != common.substring(0, 1)) {
-                          initial = common.substring(0, 1);
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "A",
-                                style: themeContext.textTheme.subtitle1,
-                              ),
-                              gapH10,
-                              _listTile(
-                                flagName: countries[index].flags!.png ?? "",
-                                translationName: translatedName,
-                                country: countries[index].capital?.first ?? "",
-                                sub1: themeContext.textTheme.subtitle1!,
-                                sub2: themeContext.textTheme.subtitle2!,
-                              ),
-                            ],
-                          );
-                        }
-
-                        log(initial);
-                        if (initial != common.substring(0, 1)) {
-                          initial = common.substring(0, 1);
-                          log(initial);
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              gapH10,
-                              Text(
-                                initial,
-                                style: themeContext.textTheme.subtitle1,
-                              ),
-                              gapH10,
-                              _listTile(
-                                flagName: countries[index].flags!.png ?? "",
-                                translationName: translatedName,
-                                country: countries[index].capital?.first ?? "",
-                                sub1: themeContext.textTheme.subtitle1!,
-                                sub2: themeContext.textTheme.subtitle2!,
-                              ),
-                            ],
-                          );
-                        }
-                        // var translatedName = data[index].name?.common;
-
-                        return InkWell(
-                          onTap: (() {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CountryDetailsPage(
-                                  country: countries[index],
-                                ),
-                              ),
-                            );
-                          }),
-                          child: _listTile(
+                child: ListView.builder(
+                  itemCount: countries.length,
+                  itemBuilder: (context, index) {
+                    var common = countries[index].name?.common;
+                    var translatedName = _getTraslation(
+                      common!,
+                      choosenLang.shortName,
+                      countries[index].translations!,
+                    );
+                    if (index == 0 && initial != common.substring(0, 1)) {
+                      initial = common.substring(0, 1);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "A",
+                            style: themeContext.textTheme.subtitle1,
+                          ),
+                          gapH10,
+                          _listTile(
                             flagName: countries[index].flags!.png ?? "",
                             translationName: translatedName,
                             country: countries[index].capital?.first ?? "",
                             sub1: themeContext.textTheme.subtitle1!,
                             sub2: themeContext.textTheme.subtitle2!,
                           ),
+                        ],
+                      );
+                    }
+
+                    log(initial);
+                    if (initial != common.substring(0, 1)) {
+                      initial = common.substring(0, 1);
+                      log(initial);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          gapH10,
+                          Text(
+                            initial,
+                            style: themeContext.textTheme.subtitle1,
+                          ),
+                          gapH10,
+                          _listTile(
+                            flagName: countries[index].flags!.png ?? "",
+                            translationName: translatedName,
+                            country: countries[index].capital?.first ?? "",
+                            sub1: themeContext.textTheme.subtitle1!,
+                            sub2: themeContext.textTheme.subtitle2!,
+                          ),
+                        ],
+                      );
+                    }
+                    // var translatedName = data[index].name?.common;
+
+                    return InkWell(
+                      onTap: (() {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CountryDetailsPage(
+                              country: countries[index],
+                            ),
+                          ),
                         );
-                      }))
+                      }),
+                      child: _listTile(
+                        flagName: countries[index].flags!.png ?? "",
+                        translationName: translatedName,
+                        country: countries[index].capital?.first ?? "",
+                        sub1: themeContext.textTheme.subtitle1!,
+                        sub2: themeContext.textTheme.subtitle2!,
+                      ),
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
@@ -388,6 +536,26 @@ class _HomePageState extends ConsumerState<HomePage> {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _filterTile(
+      String continent, bool isChecked, BuildContext themeContext) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        // key: ValueKey(i.continent),
+        children: [
+          Text(
+            continent,
+            style: Theme.of(themeContext).textTheme.bodyText2,
+          ),
+          const Spacer(),
+          Icon(
+            isChecked ? Icons.check_box : Icons.check_box_outline_blank_rounded,
+          ),
         ],
       ),
     );

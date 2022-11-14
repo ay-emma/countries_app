@@ -22,11 +22,12 @@ final getCountriesProvider = FutureProvider(((ref) async {
 }));
 
 final countriesProvider = StateNotifierProvider<Countries, List<Country>>(
-  ((ref) => Countries()),
+  ((ref) => Countries(ref)),
 );
 
 class Countries extends StateNotifier<List<Country>> {
-  Countries() : super([]);
+  Countries(this.ref) : super([]);
+  final Ref ref;
 
   var _originState = <Country>[];
 
@@ -52,14 +53,104 @@ class Countries extends StateNotifier<List<Country>> {
     var newData = data.toList();
     state = newData;
   }
+}
 
-  var local = 'eng';
+/// Continent Filter
+/// provider
+final continentFilterProvider =
+    StateNotifierProvider<ContinentFilterNotifier, List<ContinentFilter>>(
+        ((ref) => ContinentFilterNotifier()));
 
-  getDetail() {
-    // return;
+class ContinentFilterNotifier extends StateNotifier<List<ContinentFilter>> {
+  ContinentFilterNotifier() : super(continents);
+
+  changeState(int index) {
+    var newState = state;
+
+    newState[index] = ContinentFilter(
+        continent: newState[index].continent,
+        isChecked: !(newState[index].isChecked));
+
+    log(newState.toString());
+    state = [...newState];
   }
 }
 
+class ContinentFilter {
+  ContinentFilter({required this.continent, this.isChecked = false});
+  final String continent;
+  final bool isChecked;
+
+  @override
+  String toString() {
+    return " $isChecked ";
+  }
+}
+
+List<ContinentFilter> continents = [
+  ContinentFilter(continent: "Africa"),
+  ContinentFilter(continent: "Antarctica"),
+  ContinentFilter(continent: "Asia"),
+  ContinentFilter(continent: "Europe"),
+  ContinentFilter(continent: "Oceania"),
+  ContinentFilter(continent: "South America"),
+  ContinentFilter(continent: "North America"),
+];
+
+/// Continent Filter
+/// provider
+final timezoneFilterProvider =
+    StateNotifierProvider<TimezoneFilterNotifier, List<TimezoneFilter>>(
+        ((ref) => TimezoneFilterNotifier()));
+
+class TimezoneFilterNotifier extends StateNotifier<List<TimezoneFilter>> {
+  TimezoneFilterNotifier() : super(timezone);
+
+  changeState(int index) {
+    var newState = state;
+
+    newState[index] = TimezoneFilter(
+        timezone: newState[index].timezone,
+        isChecked: !(newState[index].isChecked));
+
+    log(newState.toString());
+    state = [...newState];
+  }
+}
+
+class TimezoneFilter {
+  TimezoneFilter({required this.timezone, this.isChecked = false});
+  final String timezone;
+  final bool isChecked;
+
+  @override
+  String toString() {
+    return " $isChecked ";
+  }
+}
+
+List<TimezoneFilter> timezone = [
+  TimezoneFilter(timezone: "UTC+01:00"),
+  TimezoneFilter(timezone: "UTC-02:00"),
+  TimezoneFilter(timezone: "UTC-03:00"),
+  TimezoneFilter(timezone: "UTC-04:00"),
+  TimezoneFilter(timezone: "UTC+05:00"),
+  TimezoneFilter(timezone: "UTC+06:00"),
+  TimezoneFilter(
+    timezone: "UTC-07:00",
+  ),
+  TimezoneFilter(
+    timezone: "UTC-08:00",
+  ),
+  TimezoneFilter(
+    timezone: "UTC-09:00",
+  ),
+  TimezoneFilter(
+    timezone: "UTC-10:00",
+  ),
+];
+
+/// Language Translation
 final choosenLangProvider = StateProvider(
   ((ref) => Langs(
         name: "English",
@@ -82,6 +173,7 @@ class Langs {
   String shortName;
   bool isSelected;
 }
+
 
 ///    "translations": {
 //   "ara": {
@@ -181,8 +273,6 @@ class Langs {
 //     "common": "巴巴多斯"
 //   }
 // },
-
-
 
 // getCountries.when(
 //                     error: (e, s) {
