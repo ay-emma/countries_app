@@ -384,7 +384,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                           Navigator.of(context).pop();
                                         }),
                                         child: Container(
-                                          width: 235,
+                                          width: 205,
                                           height: 48,
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFFF6C00),

@@ -28,7 +28,7 @@ freezed_annotation, json_annotation, build_runner, freezed, and json_serializabl
 
 ## App link
 
-[Apptizer link](https://appetize.io/app/ub2k5vwlzzapzdd45p7arvzsy4?device=pixel4&osVersion=11.0&scale=75)
+[Apptizer link](https://appetize.io/app/62fhgjvfi6ee7hwmow6hbv5kla?device=pixel4&osVersion=11.0&scale=75)
 
 [Google drive link](https://drive.google.com/file/d/1UqgjfxtgiH2kqC2lkmLI6n_k4-NMwe2W/view?usp=sharing)
 

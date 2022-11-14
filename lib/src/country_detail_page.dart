@@ -16,7 +16,7 @@ class _CountryDetailsPageState extends State<CountryDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = [widget.country.flags!.png];
+    var list = [widget.country.flags!.png, widget.country.coatOfArms!.png!];
 
     final themeContext = Theme.of(context);
     final preTextstyle = themeContext.textTheme.headline5;
@@ -65,7 +65,7 @@ class _CountryDetailsPageState extends State<CountryDetailsPage> {
                               borderRadius: BorderRadius.circular(8.0),
                               image: DecorationImage(
                                 image: NetworkImage(i!),
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.cover,
                               )),
                           child: Row(
                             children: [
