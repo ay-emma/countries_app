@@ -2,13 +2,19 @@
 
 A  Flutter project that shows list of countries and details about each country.
 
-## Features Currently supported
+## Features supported
 
 - View all sorted list of countries
 - Theme mode switch
 - Localization filter
 - View a country details
 - Search for a country by name
+- Filter countries by continent and timezone
+
+## Code setup
+
+The app code sturcture are divided into files and folders. All under the src folder except main the entry point for flutter engin. Models folder contains all the models and business logic of the app separated for the UI. Theme folder contains all the app themes.
+Homepage shows the list of counries and details page shows the details about a selected country.
 
 ## App link
 
