@@ -53,6 +53,47 @@ class Countries extends StateNotifier<List<Country>> {
     var newData = data.toList();
     state = newData;
   }
+
+  showFilterResult() {
+    final coninentFilter = ref.read(continentFilterProvider);
+    final timezoneFilter = ref.read(timezoneFilterProvider);
+    var bucket = <Country>[];
+    var queryList = <Country>{};
+
+    for (var i in _originState) {
+      var continent = i.continents!.first;
+
+      //continent Filter
+      for (var selected in coninentFilter) {
+        if (selected.isChecked == true) {
+          log("${selected.continent} is it == $continent");
+          if (selected.continent == continent) {
+            bucket.add(i);
+          }
+        }
+        // else nothing
+      }
+    }
+
+    //Timezone Filter
+    for (var t in bucket) {
+      //? why should a country have multiple time one  :(
+      var timeZone = t.timezones!;
+
+      for (var selectedTimezone in timezoneFilter) {
+        if (selectedTimezone.isChecked == true) {
+          log("${selectedTimezone.timezone} is it == $timeZone");
+          for (var k in timeZone) {
+            if (selectedTimezone.timezone == k) {
+              queryList.add(t);
+            }
+          }
+        }
+      }
+    }
+
+    state = queryList.toList();
+  }
 }
 
 /// Continent Filter
@@ -62,7 +103,7 @@ final continentFilterProvider =
         ((ref) => ContinentFilterNotifier()));
 
 class ContinentFilterNotifier extends StateNotifier<List<ContinentFilter>> {
-  ContinentFilterNotifier() : super(continents);
+  ContinentFilterNotifier() : super([...continents]);
 
   changeState(int index) {
     var newState = state;
@@ -73,6 +114,10 @@ class ContinentFilterNotifier extends StateNotifier<List<ContinentFilter>> {
 
     log(newState.toString());
     state = [...newState];
+  }
+
+  reset() {
+    state = [...continents];
   }
 }
 
@@ -104,7 +149,7 @@ final timezoneFilterProvider =
         ((ref) => TimezoneFilterNotifier()));
 
 class TimezoneFilterNotifier extends StateNotifier<List<TimezoneFilter>> {
-  TimezoneFilterNotifier() : super(timezone);
+  TimezoneFilterNotifier() : super([...timezone]);
 
   changeState(int index) {
     var newState = state;
@@ -115,6 +160,10 @@ class TimezoneFilterNotifier extends StateNotifier<List<TimezoneFilter>> {
 
     log(newState.toString());
     state = [...newState];
+  }
+
+  reset() {
+    state = [...timezone];
   }
 }
 
@@ -136,18 +185,10 @@ List<TimezoneFilter> timezone = [
   TimezoneFilter(timezone: "UTC-04:00"),
   TimezoneFilter(timezone: "UTC+05:00"),
   TimezoneFilter(timezone: "UTC+06:00"),
-  TimezoneFilter(
-    timezone: "UTC-07:00",
-  ),
-  TimezoneFilter(
-    timezone: "UTC-08:00",
-  ),
-  TimezoneFilter(
-    timezone: "UTC-09:00",
-  ),
-  TimezoneFilter(
-    timezone: "UTC-10:00",
-  ),
+  TimezoneFilter(timezone: "UTC-07:00"),
+  TimezoneFilter(timezone: "UTC-08:00"),
+  TimezoneFilter(timezone: "UTC-09:00"),
+  TimezoneFilter(timezone: "UTC-10:00"),
 ];
 
 /// Language Translation
@@ -164,6 +205,11 @@ List<Langs> langs = [
   Langs(name: "English", shortName: "eng", isSelected: false),
   Langs(name: "Барбадос", shortName: "rus", isSelected: false),
   Langs(name: "バルバドス", shortName: "jpn", isSelected: false),
+  Langs(name: "French", shortName: "fra", isSelected: false),
+  Langs(name: "바베이도스", shortName: "kor", isSelected: false),
+  Langs(name: "باربادوس", shortName: "per", isSelected: false),
+  Langs(name: "German", shortName: "deu", isSelected: false),
+  Langs(name: "巴巴多斯", shortName: "zho", isSelected: false),
 ];
 
 class Langs {
@@ -173,7 +219,6 @@ class Langs {
   String shortName;
   bool isSelected;
 }
-
 
 ///    "translations": {
 //   "ara": {

@@ -4,7 +4,6 @@ import 'package:countries_app/src/country_detail_page.dart';
 import 'package:countries_app/src/model/country/translations.dart';
 import 'package:countries_app/src/model/model.dart';
 import 'package:countries_app/src/theme/app_theme.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -341,7 +340,19 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     children: [
                                       //Reset btn
                                       InkWell(
-                                        onTap: (() {}),
+                                        onTap: (() {
+                                          //reset continent
+                                          ref
+                                              .read(continentFilterProvider
+                                                  .notifier)
+                                              .reset();
+                                          //reset timezone
+                                          ref
+                                              .read(timezoneFilterProvider
+                                                  .notifier)
+                                              .reset();
+                                          Navigator.of(context).pop();
+                                        }),
                                         child: Container(
                                           width: 100,
                                           height: 48,
@@ -364,9 +375,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         ),
                                       ),
                                       const Spacer(),
-                                      //Reset btn
+                                      //Show result btn
                                       InkWell(
-                                        onTap: (() {}),
+                                        onTap: (() {
+                                          ref
+                                              .read(countriesProvider.notifier)
+                                              .showFilterResult();
+                                          Navigator.of(context).pop();
+                                        }),
                                         child: Container(
                                           width: 235,
                                           height: 48,
@@ -604,6 +620,26 @@ String _getTraslation(
     case "jpn":
       {
         return trans.jpn!.official!;
+      }
+    case "fra":
+      {
+        return trans.fra!.official!;
+      }
+    case "kor":
+      {
+        return trans.jpn!.official!;
+      }
+    case "per":
+      {
+        return trans.per!.official!;
+      }
+    case "deu":
+      {
+        return trans.deu!.official!;
+      }
+    case "zho":
+      {
+        return trans.zho!.official!;
       }
     default:
       {
