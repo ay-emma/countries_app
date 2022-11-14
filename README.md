@@ -10,6 +10,10 @@ A  Flutter project that shows list of countries and details about each country.
 - View a country details
 - Search for a country by name
 
+## App link
+
+[Apptizer link](https://appetize.io/app/2lnhxknop4mftlk2ly7gu2gl6e?device=pixel4&osVersion=11.0&scale=75)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
