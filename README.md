@@ -28,9 +28,10 @@ freezed_annotation, json_annotation, build_runner, freezed, and json_serializabl
 
 ## App link
 
-[Apptizer link](https://appetize.io/app/2lnhxknop4mftlk2ly7gu2gl6e?device=pixel4&osVersion=11.0&scale=75)
+[Apptizer link](https://appetize.io/app/ub2k5vwlzzapzdd45p7arvzsy4?device=pixel4&osVersion=11.0&scale=75)
 
 [Google drive link](https://drive.google.com/file/d/1UqgjfxtgiH2kqC2lkmLI6n_k4-NMwe2W/view?usp=sharing)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
@@ -43,3 +44,11 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Pictures of the app
+
+![Light mode](assets/lightmode.png)
+![Light mode](assets/filter_img.png)
+![Light mode](assets/language_filter_img.png)
+![Light mode](assets/search_img.png)
+![Light mode](assets/details_page_img.png)
