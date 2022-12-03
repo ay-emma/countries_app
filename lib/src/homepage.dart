@@ -162,8 +162,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                               builder: (context) {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 15.0, vertical: 10.0),
-                                  height: 600,
+                                      horizontal: 15.0, vertical: 20.0),
+                                  height: 550,
                                   child: Column(
                                     children: [
                                       Row(

@@ -52,3 +52,7 @@ samples, guidance on mobile development, and a full API reference.
 ![Light mode](assets/language_filter_img.png)
 ![Light mode](assets/search_img.png)
 ![Light mode](assets/details_page_img.png)
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT)

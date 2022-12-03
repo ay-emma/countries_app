@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ayo.countries_app">
+    package="com.whoisay.countriesApp">
     <uses-permission android:name="android.permission.INTERNET"/>
 
    <application

@@ -17,10 +17,11 @@ class MyApp extends ConsumerWidget {
     final thememode = ref.watch(themeNotifierProvider);
     return MaterialApp(
       title: 'Countries app',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: thememode,
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }

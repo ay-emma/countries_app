@@ -156,3 +156,11 @@ class AppTheme {
     ),
   );
 }
+
+
+
+// flutter pub run change_app_package_name:main com.new.package.name
+//com.ayo.countriesApp
+//com.whoisay.countriesApp
+
+// App display name - Countries Info A-Z
