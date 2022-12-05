@@ -32,6 +32,10 @@ freezed_annotation, json_annotation, build_runner, freezed, and json_serializabl
 
 [Google drive link](https://drive.google.com/file/d/1UqgjfxtgiH2kqC2lkmLI6n_k4-NMwe2W/view?usp=sharing)
 
+## View on web
+
+https://countries-info-a-z.web.app/#/
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
@@ -56,3 +60,7 @@ samples, guidance on mobile development, and a full API reference.
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT)
+
+## Privacy
+
+[Link](https://www.privacypolicygenerator.info/live.php?token=DCXE0pJgetqp6NZv0mhCMUMF9GTyvZqc)
