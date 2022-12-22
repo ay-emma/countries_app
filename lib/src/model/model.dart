@@ -47,9 +47,12 @@ class Countries extends StateNotifier<List<Country>> {
       state = _originState;
       return;
     }
+    String newQueryString = queryText[0].toUpperCase() + queryText.substring(1);
+    log("new query");
+    log(newQueryString);
 
     var data = _originState
-        .where((element) => element.name!.common!.startsWith(queryText));
+        .where((element) => element.name!.common!.startsWith(newQueryString));
     var newData = data.toList();
     state = newData;
   }
@@ -59,6 +62,7 @@ class Countries extends StateNotifier<List<Country>> {
     final timezoneFilter = ref.read(timezoneFilterProvider);
     var bucket = <Country>[];
     var queryList = <Country>{};
+    var notSelectedBucket = <Country>[];
 
     for (var i in _originState) {
       var continent = i.continents!.first;
@@ -70,9 +74,14 @@ class Countries extends StateNotifier<List<Country>> {
           if (selected.continent == continent) {
             bucket.add(i);
           }
+        } else {
+          notSelectedBucket.add(i);
         }
-        // else nothing
       }
+    }
+
+    if (bucket.isEmpty) {
+      bucket = notSelectedBucket;
     }
 
     //Timezone Filter
@@ -93,6 +102,9 @@ class Countries extends StateNotifier<List<Country>> {
     }
 
     state = queryList.toList();
+    if (queryList.isEmpty) {
+      state = bucket;
+    }
   }
 }
 
