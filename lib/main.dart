@@ -16,7 +16,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final thememode = ref.watch(themeNotifierProvider);
     return MaterialApp(
-      title: 'Countries app',
+      title: 'Countries Info A-Z',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
